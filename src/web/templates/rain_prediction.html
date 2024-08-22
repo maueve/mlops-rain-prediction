@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Lluvia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007dc6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #79b9e7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Predicción de Lluvia</h2>
+        <label for="humidity">Porcentaje de Humedad (3 p.m.):</label>
+        <input type="number" id="humidity" name="humidity" min="0" max="100" required>
+        <button onclick="predictRain()">Consultar</button>
+        <button id="limpiar">Limpiar</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function predictRain() {
+            const humidity = document.getElementById('humidity').value;
+
+            if (humidity < 0 || humidity > 100 ) {
+                alert("Por favor ingrese un valor entre 0 y 100.");
+                return;
+            }
+
+            if (humidity === null || humidity === "" ) {
+                let resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = '';
+                return;
+            }
+
+            // Normalizar el valor de humedad (por ejemplo, entre 0 y 1)
+            const normalizedHumidity = humidity / 100;
+
+            // Aquí se llamaría al servicio de predicción con el valor normalizado
+            // Por ahora, simularemos la llamada
+            fetchPrediction(normalizedHumidity);
+        }
+
+        function fetchPrediction(normalizedHumidity) {
+            // Ejemplo de solicitud fetch simulada
+            // En una aplicación real, reemplaza esta función con la llamada al servicio
+            console.log("Humedad normalizada:", normalizedHumidity);
+
+            /*
+            // Simulación de respuesta del servicio
+            const willRain = Math.random() < normalizedHumidity;  // Simulación basada en la humedad
+
+            const resultText = willRain ? "Lloverá mañana." : "No lloverá mañana.";
+            document.getElementById('result').innerText = resultText;
+
+             */
+
+            let url = `http://127.0.0.1:8000/predict?humidity=${normalizedHumidity}`;
+
+            console.log(url);
+
+            // Hacer la solicitud GET
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    let resultDiv = document.getElementById("result");
+                    let emoji = data.llovera ? "🌧️" : "☀️"; // Emoji dependiendo de si lloverá o no
+                    resultDiv.innerHTML = `${data.mensaje} ${emoji}`;
+                })
+                .catch(error => {
+                    console.error("Error al obtener la predicción:", error);
+                });
+
+        }
+
+        document.getElementById('limpiar').addEventListener('click', function() {
+            document.getElementById('humidity').value = '';
+            document.getElementById('result').innerHTML = '';
+        });
+
+    </script>
+</body>
+</html>
