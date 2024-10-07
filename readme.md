@@ -33,11 +33,18 @@ docker build -t web-clima-image .
 
 ### 3. Ejecutar el Proyecto
 
-Para iniciar el proyecto ejecuta:
+Para iniciar el proyecto en la carpeta src/services ejecutar:
 
 ```bash
-python src/main.py
+docker run --name servicio-inferencia-app -d -p 8000:8000 servicio-inferencia-image
 ```
+
+En la carpeta src/web ejecutar:
+
+```bash
+docker run --name web-clima-app -d -p 8080:8080 web-clima-image
+```
+
 
 ### 4. Acceder a la Aplicacion
 

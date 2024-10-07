@@ -26,8 +26,8 @@ def fill_model_cache():
     :return:
     """
     global MODEL
-    MODEL_PATH = '../../data/models/model.pkl'
-    #MODEL_PATH = 'model.pkl'
+    #MODEL_PATH = '../../data/models/model.pkl'
+    MODEL_PATH = 'model.pkl'
     print("Model Path: ", MODEL_PATH)
     MODEL = pickle.load(open(MODEL_PATH, 'rb'))
 
