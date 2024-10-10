@@ -2,10 +2,13 @@ import numpy as np
 import pickle
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Body, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from middleware import LogstashMiddleware
 
 app = FastAPI()
+
+app.add_middleware(LogstashMiddleware)
 
 
 app.add_middleware(
@@ -15,6 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 
 
 
