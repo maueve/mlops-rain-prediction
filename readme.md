@@ -38,7 +38,7 @@ cd notebooks
 Y  ejecutar el siguiente scrip de python:
 
 ```bash
-python test_training.py 
+python training.py 
 ```
 
 

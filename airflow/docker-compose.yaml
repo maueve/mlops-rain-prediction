@@ -49,8 +49,8 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.10.2}
-  # build: .
+  #image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.10.2}
+  build: .
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -87,6 +87,7 @@ x-airflow-common:
 
 services:
   postgres:
+    container_name: postgres
     image: postgres:13
     environment:
       POSTGRES_USER: airflow
@@ -100,6 +101,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    networks:
+      - airflow_network
 
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -114,12 +117,14 @@ services:
       retries: 50
       start_period: 30s
     restart: always
+    networks:
+      - airflow_network
 
   airflow-webserver:
     <<: *airflow-common
     command: webserver
     ports:
-      - "8080:8080"
+      - "8088:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -131,6 +136,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow_network
 
   airflow-scheduler:
     <<: *airflow-common
@@ -146,6 +153,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow_network
 
   airflow-worker:
     <<: *airflow-common
@@ -169,6 +178,9 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - shared_network
+      - airflow_network
 
   airflow-triggerer:
     <<: *airflow-common
@@ -184,6 +196,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow_network
 
   airflow-init:
     <<: *airflow-common
@@ -248,6 +262,8 @@ services:
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
+    networks:
+      - airflow_network
 
   airflow-cli:
     <<: *airflow-common
@@ -261,6 +277,8 @@ services:
       - bash
       - -c
       - airflow
+    networks:
+      - airflow_network
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
@@ -283,6 +301,14 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow_network
 
 volumes:
   postgres-db-volume:
+
+networks:
+  shared_network:
+    external: true
+  airflow_network:
+    driver: bridge
