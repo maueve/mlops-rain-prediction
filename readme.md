@@ -29,18 +29,23 @@ En la carpeta raíz del proyecto para levantar MLFLow usar el siguiente comando:
 docker compose -f docker-compose_training.yml --env-file training.env up
 ```
 
-Desde la carpeta raíz moverse al directorio notebooks:
+Desde la carpeta raíz moverse al directorio airflow y ejecutar los comandos
 
 ```bash
-cd notebooks
-```
+docker compose up airflow-init
 
-Y  ejecutar el siguiente scrip de python:
+```
 
 ```bash
-python training.py 
+docker compose up
 ```
+Después en el navegador ir a la siguiente liga para ir la la interface de Airflow:
 
+http://localhost:8088/
+
+Usar: airflow, airflow
+
+Una vez dentro correr el dag: training_dag
 
 ### 3. Ejecutar el Proyecto
 
@@ -88,8 +93,14 @@ Para ingresar a Kibana:
 
 http://localhost:5601/
 
-Para ingesar a MLFlow
+elastic, chamgeme
+
+Para ingesar a MLFlow:
 
 http://localhost:5555/
 
+Para ingesar a Airflow
 
+http://localhost:8088/
+
+airflow, airflow
