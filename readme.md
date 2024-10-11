@@ -15,45 +15,77 @@ Para correr este proyecto, es necesario tener Docker instalado. Además, se requ
 
 ## Pasos para Ejecutar el Proyecto
 
-### 1. Crear Imágen Docker para los Servicios
-
-En la carpeta `src/services/`, ejecuta el siguiente script para crear las imágenes Docker necesarias:
+### 1. Crear la red extrerna para cointainers
 
 ```bash
-sh crear_imagen.sh
+docker network create shared_network
 ```
 
-### 2. Crear la Imagen Docker para la Interfaz Web
+### 2. Registrar el modelo
 
-En la carpeta src/web/, ejecuta el siguiente comando para construir la imagen Docker de la interfaz web:
+En la carpeta raíz del proyecto para levantar MLFLow usar el siguiente comando:
 
 ```bash
-docker build -t web-clima-image .
+docker compose -f docker-compose_training.yml --env-file training.env up
 ```
+
+Desde la carpeta raíz moverse al directorio notebooks:
+
+```bash
+cd notebooks
+```
+
+Y  ejecutar el siguiente scrip de python:
+
+```bash
+python test_training.py 
+```
+
 
 ### 3. Ejecutar el Proyecto
 
-Para iniciar el proyecto en la carpeta src/services ejecutar:
+Para iniciar el proyecto, primero de debe de incializar el monitoreo, en la carpeta docker-elk, desde la carpeta raiz ejecutar:
 
 ```bash
-docker run --name servicio-inferencia-app -d -p 8000:8000 servicio-inferencia-image
+cd  docker-elk
 ```
-
-En la carpeta src/web ejecutar:
 
 ```bash
-docker run --name web-clima-app -d -p 8080:8080 web-clima-image
+docker compose up setup  
 ```
+
+Después ejecutar:
+
+```bash
+docker compose up 
+```
+
+Ahora en la carpeta raíz del proyecto, correr el siguiente comando:
+```bash
+docker compose up 
+```
+
 
 
 ### 4. Acceder a la Aplicacion
+
+Para ingresar a la página principal de la aplicación:
+
+http://localhost:8080/
+
 
 Para acceder a la definicion de la API ingresar con la siguiente url:
 
 http://localhost:8000/docs
 
-Para ingresar a la página principal de la aplicación:
+### 5. Acceder a la Infraestructura
 
-http://localhost:8080/
+Para ingresar a Kibana:
+
+http://localhost:5601/
+
+Para ingesar a MLFlow
+
+http://localhost:5555/
 
 
