@@ -73,10 +73,14 @@ Para ingresar a la página principal de la aplicación:
 
 http://localhost:8080/
 
+Para acceder directamente a la API ingresar con la siguiente url:
+
+http://127.0.0.1:8000/predict?humidity=0.8
 
 Para acceder a la definicion de la API ingresar con la siguiente url:
 
 http://localhost:8000/docs
+
 
 ### 5. Acceder a la Infraestructura
 
