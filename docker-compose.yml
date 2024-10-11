@@ -4,6 +4,8 @@ services:
     #container_name: prediction_service
     build:
       context: ./src/services
+    volumes:
+      - ./src/services:/app
     ports:
       - "8000:8000"
     networks:

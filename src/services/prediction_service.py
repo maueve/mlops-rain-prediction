@@ -1,7 +1,9 @@
 import numpy as np
 import pickle
 import os
+import mlflow
 
+from mlflow.tracking import MlflowClient
 from fastapi import FastAPI, Body, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from middleware import LogstashMiddleware
@@ -22,7 +24,10 @@ app.add_middleware(
 
 
 
-
+#mlflow.set_tracking_uri("http://localhost:5555")
+mlflow.set_tracking_uri("http://mlflow:5000")
+client = MlflowClient()
+model_name = "rain-prediction"
 MODEL = None
 
 def fill_model_cache():
@@ -31,10 +36,26 @@ def fill_model_cache():
     :return:
     """
     global MODEL
-    #MODEL_PATH = '../../data/models/model.pkl'
+
+    """
     MODEL_PATH = 'model.pkl'
     print("Model Path: ", MODEL_PATH)
     MODEL = pickle.load(open(MODEL_PATH, 'rb'))
+    """
+
+    model_version = client.get_model_version_by_alias(
+        model_name, "actual"
+    )
+
+    run_id = model_version.run_id
+
+    print("El run id es: ",run_id)
+
+    MODEL = mlflow.sklearn.load_model(
+        f"runs:/{run_id}/dtc_model",
+        dst_path='./',
+    )
+
 
 
 @app.get("/predict")

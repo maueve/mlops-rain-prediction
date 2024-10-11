@@ -1,7 +1,10 @@
 #Preprocesamiento y entrenamiento de modelos
+pandas==2.2.3
 scikit-learn==1.4.2
 matplotlib==3.9.2
 seaborn==0.13.2
+mlflow==2.14.1
+ydata-profiling==4.8.3
 
 #Servicio de Prediccion
 numpy==1.26.4
@@ -10,6 +13,7 @@ uvicorn==0.30.6
 scikit-learn==1.4.2
 python-logstash==0.4.8
 pydantic==2.9.2
+mlflow==2.14.1
 
 
 #Aplicacion Web de Prediccion
